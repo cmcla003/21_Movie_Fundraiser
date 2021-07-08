@@ -41,7 +41,7 @@ snack_order =[]
 
 check_snack = "invalid choice"
 while check_snack == "invalid choice":
-    want_snack = input("Do you want to order snacks? ").lower()
+    want_snack = input("Do you want to order snacks? ").lower().strip()
     check_snack = string_check(want_snack,yes_no)
 
 if check_snack == "Yes":
@@ -49,7 +49,7 @@ if check_snack == "Yes":
     desired_snack= ""
     while desired_snack != "xxx":
 
-        desired_snack = input("Snack: ").lower()
+        desired_snack = input("Snack: ").lower().strip()
         if desired_snack == "xxx":
             break
 
