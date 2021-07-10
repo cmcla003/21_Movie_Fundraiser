@@ -190,6 +190,9 @@ pay_method = [
     ["credit", "cr"]
 ]
 
+#store surcharge multiplier
+surcharge_multi_list = []
+
 # Data frame dictionary
 movie_data_dict = {
     'Name': all_names,
@@ -198,7 +201,8 @@ movie_data_dict = {
     'Water': water,
     'Pita Chips': pita_chips,
     'M&Ms': mms,
-    'Orange Juice': orange_juice
+    'Orange Juice': orange_juice,
+    'Surcharge_Multiplier': surcharge_multi_list
 }
 
 # Price for snacks dictionary
@@ -276,6 +280,7 @@ while name != "xxx" and ticket_count < MAX_TICKETS:
     else:
         surcharge_multiplier = 0
 
+    surcharge_multi_list.append(surcharge_multiplier)
 # end of tickets/snacks/payment loop
 
 # print details
@@ -291,8 +296,27 @@ movie_frame["Sub Total"] = \
     movie_frame['M&Ms'] * price_dict['M&Ms'] + \
     movie_frame['Orange Juice'] * price_dict['Orange Juice']
 
-movie_frame = movie_frame.rename(columns={'Orange Juice': 'OJ', 'Pita chips': 'Chips'})
+movie_frame['Surcharge'] = \
+    movie_frame["Sub Total"] * movie_frame["Surcharge_Multiplier"]
+
+movie_frame["Total"] = movie_frame["Sub Total"] + movie_frame['Surcharge']
+
+movie_frame = movie_frame.rename(columns={'Orange Juice': 'OJ', 'Pita chips': 'Chips',
+                                          "Surcharge_Multiplier": 'SM'})
 print(movie_frame)
+
+# set columns to be printed
+pandas.set_option('display.max_columns', None)
+# display to 2 dp
+pandas.set_option('precision', 2)
+
+print_all = input("Print all columns? enter y for yes ")
+if print_all =="y":
+    print(movie_frame)
+else:
+    print(movie_frame[['Ticket', 'Sub Total', 'Surcharge', 'Total']])
+
+print()
 
  # Calculate ticket price & profit
 ticket_profit = (ticket_sales - (5 * ticket_count))
