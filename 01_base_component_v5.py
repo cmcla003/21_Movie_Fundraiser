@@ -116,7 +116,7 @@ def get_snack():
     ]
 
     # holds snack order for a single user
-    get_order = []
+    snack_order = []
 
     desired_snack = ""
     while desired_snack != "xxx":
@@ -126,7 +126,7 @@ def get_snack():
         # ask for snack convert to lowercase
         desired_snack = input("Snack: ").lower()
         if desired_snack == "xxx":
-            return get_order
+            return snack_order
 
         #If item has number seperate into two (number/string)
         if re.match(number_regex, desired_snack):
@@ -153,7 +153,7 @@ def get_snack():
 
         # add snack to list
         if snack_choice != "xxx" and snack_choice != "invalid choice":
-            get_order.append(snack_row)
+            snack_order.append(snack_row)
 
 # ********* Main Routine ********
 
@@ -168,20 +168,47 @@ name = ""
 ticket_count = 0
 ticket_sales = 0
 
-# initialuse lists
+# initialise lists
 all_names = []
 all_tickets = []
+popcorn = []
+mms = []
+pita_chips = []
+water = []
+orange_juice = []
 
+snack_lists = [popcorn, mms, pita_chips, water, orange_juice]
+
+#list for valid yes/no response
 yes_no =[
     ["yes","y"],["no","n"]
+]
+
+# list valid response for payment
+pay_method = [
+    ["cash", "ca"],
+    ["credit", "cr"]
 ]
 
 # Data frame dictionary
 movie_data_dict = {
     'Name': all_names,
-    'Ticket': all_tickets
+    'Ticket': all_tickets,
+    'Popcorn': popcorn,
+    'Water': water,
+    'Pita Chips': pita_chips,
+    'M&Ms': mms,
+    'Orange Juice': orange_juice
 }
 
+# Price for snacks dictionary
+price_dict = {
+    'Popcorn': 2.5,
+    'Water': 2,
+    'Pita Chips': 4.5,
+    'M&Ms': 3,
+    'Orange Juice': 3.25
+}
 # ask user if used program before & show instructions
 
 # Loop to get ticket details
@@ -220,28 +247,52 @@ while name != "xxx" and ticket_count < MAX_TICKETS:
         check_snack = string_check(want_snack, yes_no)
 
     if check_snack == "Yes":
-        get_order = get_snack()
+        snack_order = get_snack()
     else:
-        get_order = []
+        snack_order = []
 
-    # show snack order
-    print()
-    if len(get_order) == 0:
-        print("Snacks Ordered: None")
+    # assume snack purchased
+    for item in snack_lists:
+        item.append(0)
 
-    else:
-        print("Snacks Ordered: ")
-        print(get_order)
+    for item in snack_order:
+        if len(item)  > 0:
+            to_find = (item[1])
+            amount = (item[0])
+            add_list = movie_data_dict[to_find]
+            add_list[-1] = amount
 
     # get payment method (adds surcharge if needed)
 
+    # Ask for payment method
+    how_pay = "invalid choice"
+    while how_pay == "invalid choice":
+        how_pay = input("Please choose a payment method of cash or credit ").lower()
+        how_pay = string_check(how_pay, pay_method)
+
+    # calculate surcharge
+    if how_pay == "Credit":
+        surcharge_multiplier = 0.05
+    else:
+        surcharge_multiplier = 0
 
 # end of tickets/snacks/payment loop
 
 # print details
+print()
 movie_frame = pandas.DataFrame(movie_data_dict)
-print(movie_frame)
+movie_frame = movie_frame.set_index('Name')
 
+movie_frame["Sub Total"] = \
+    movie_frame['Ticket'] + \
+    movie_frame['Popcorn'] * price_dict['Popcorn'] + \
+    movie_frame['Water'] * price_dict['Water'] + \
+    movie_frame['Pita Chips'] * price_dict['Pita Chips'] + \
+    movie_frame['M&Ms'] * price_dict['M&Ms'] + \
+    movie_frame['Orange Juice'] * price_dict['Orange Juice']
+
+movie_frame = movie_frame.rename(columns={'Orange Juice': 'OJ', 'Pita chips': 'Chips'})
+print(movie_frame)
 
  # Calculate ticket price & profit
 ticket_profit = (ticket_sales - (5 * ticket_count))
@@ -253,12 +304,6 @@ else:
     print("You have sold {} tickets. \n"
           "There are {} tickets available.".format(ticket_count, MAX_TICKETS-ticket_count))
 
-
-    # Loop to ask for snacks
-
-    # Calculate snack price
-
-    # Ask for payment method (apply surcharge if applicable)
 
 # Calculate total sales & profit
 
