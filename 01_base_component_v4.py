@@ -109,10 +109,10 @@ def get_snack():
     # each item in valid snacks with valid options for each snack, incl abbreviations
     valid_snacks = [
         ["popcorn", "p", "corn", "a"],
-        ["M&M's", "m&m's", "mms", "m","mm", "MM", "b"],
+        ["M&Ms", "m&ms", "mms", "m","mm", "MM", "b"],
         ["pita chips", "chips", "pc", "pita", "c"],
         ["water","w", "d"],
-        ["orange", "orange juice", "OJ", "oj","e"]
+        ["Orange Juice", "orange juice", "OJ", "oj","e"]
     ]
 
     # holds snack order for a single user
