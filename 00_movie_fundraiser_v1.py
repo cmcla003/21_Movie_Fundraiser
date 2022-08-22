@@ -38,7 +38,7 @@ def int_check(question):
         except ValueError:
             print(error)
 
-# checks ticekts lett and warns user if max tickets being approached
+# checks ticekts let and warns user if max tickets being approached
 def check_tickets(tickets_sold, ticket_limit):
 
     if tickets_sold < ticket_limit - 1:
@@ -392,7 +392,3 @@ if ticket_count == MAX_TICKETS:
 else:
     print("You have sold {} tickets. \n"
           "There are {} tickets available.".format(ticket_count, MAX_TICKETS-ticket_count))
-
-
-
-# Output data to text file
